@@ -8,30 +8,28 @@ jobs:
 
     strategy:
       matrix:
-      python-version: [3.7 3.8 3.9]
+        python-version: [3.7, 3.8, 3.9]
 
     steps:
-    - name: checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: set up python
-      uses: actions/pyhton-install@v2
-      with: 
-        python-version: ${{matrix.python-version}}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with: 
+          python-version: ${{ matrix.python-version }}
 
-    - name: install dependencies 
-      run: 
-        cd chapter4
-        python -m pip install pip --upgrade
-        if [ -f requirements.txt ]; then install requirements.txt; fi
+      - name: Install dependencies
+        run: |
+          cd chapter4
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: run tests
-      run: 
-        cd chapter4
-        python -m unittest discover 
+      - name: Run tests
+        run: |
+          cd chapter4
+          python -m unittest discover
 
-    - name: notify of success
-      run: echo "success on versrion ${{matrix.python-version}}"
-      if: success ()
-
-
+      - name: Notify of success
+        if: success()
+        run: echo "✅ Success on version ${{ matrix.python-version }}"
